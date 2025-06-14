@@ -7,6 +7,9 @@ const apiSecret = process.env.STEAM_SECRET_KEY!;
 const client = new StreamClient(apiKey, apiSecret);
 export async function POST(req: NextRequest) {
   const { image, name, email, id } = await req.json();
+  if (!image || !name || !email || !id) {
+    throw new Error('Missing required fields');
+  }
   const newUser: UserRequest = {
     id,
     name,
