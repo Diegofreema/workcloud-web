@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const { image, name, email, id, convexId } = await req.json();
     if (!image || !name || !email || !id || !convexId) {
       throw new Error(
-        `Missing required fields: image:${image} name:${name} email:${email} id:${id}`
+        `Missing required fields: image:${image} name:${name} email:${email} id:${id} convexId:${convexId}`
       );
     }
     const newUser: UserRequest = {
