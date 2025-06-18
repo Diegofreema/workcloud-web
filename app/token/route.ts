@@ -7,8 +7,8 @@ const apiSecret = process.env.STEAM_SECRET_KEY!;
 const client = new StreamClient(apiKey, apiSecret);
 export async function POST(req: NextRequest) {
   try {
-    const { image, name, email, id } = await req.json();
-    if (!image || !name || !email || !id) {
+    const { image, name, email, id, convexId } = await req.json();
+    if (!image || !name || !email || !id || !convexId) {
       throw new Error(
         `Missing required fields: image:${image} name:${name} email:${email} id:${id}`
       );
@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       role: 'user',
       custom: {
         email,
+        convexId,
       },
     };
 
