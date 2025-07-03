@@ -385,10 +385,10 @@ const PrivacyPolicy = () => {
           <p className="text-slate-600">
             For questions about this Privacy Policy, please contact us at{' '}
             <a
-              href="mailto:privacy@workcloud.com"
+              href="mailto:workcloud009@gmail.com"
               className="text-blue-600 hover:text-blue-700 underline"
             >
-              privacy@workcloud.com
+              workcloud009@gmail.com
             </a>
           </p>
         </div>
