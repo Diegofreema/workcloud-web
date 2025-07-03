@@ -24,7 +24,7 @@ const PrivacyPolicy = () => {
               <Shield className="h-8 w-8 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">
+              <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-slate-900">
                 Privacy Policy & User Agreement
               </h1>
               <p className="text-slate-600 mt-1">
