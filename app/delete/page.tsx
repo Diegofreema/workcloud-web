@@ -1,11 +1,10 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-
+import { toast } from 'sonner';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -24,8 +24,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -33,31 +31,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { AlertTriangle, ArrowLeft, Trash2, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
+import { Textarea } from '@/components/ui/textarea';
 import {
   AccountDeletionFormData,
   accountDeletionSchema,
 } from '@/lib/validation';
+import { AlertTriangle, ArrowLeft, CheckCircle, Trash2 } from 'lucide-react';
+import Link from 'next/link';
 
 // Mock user data - replace with actual auth
-const mockUser = {
-  id: 'user_123',
-  email: 'user@example.com',
-};
 
 export default function DeleteAccountPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const createDeletionRequest = useMutation(
-    api.deleteRequests.createDeletionRequest
-  );
-  const existingRequest = useQuery(api.deleteRequests.getUserDeletionRequest, {
-    userId: mockUser.id,
-  });
 
   const form = useForm<AccountDeletionFormData>({
     resolver: zodResolver(accountDeletionSchema),
@@ -73,12 +60,9 @@ export default function DeleteAccountPage() {
   const onSubmit = async (data: AccountDeletionFormData) => {
     setIsLoading(true);
     try {
-      await createDeletionRequest({
-        userId: mockUser.id,
-        email: data.email,
-        reason: data.reason,
-        feedback: data.feedback,
-      });
+      toast.success('Account deletion request submitted successfully.');
+      console.log(data);
+
       setIsSubmitted(true);
     } catch (error) {
       console.error('Error submitting deletion request:', error);
@@ -92,43 +76,6 @@ export default function DeleteAccountPage() {
       setIsLoading(false);
     }
   };
-
-  if (existingRequest) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4">
-        <div className="max-w-2xl mx-auto">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <CardTitle className="text-green-600">
-                  Deletion Request Pending
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                You already have a pending account deletion request submitted on{' '}
-                {new Date(existingRequest.requestedAt).toLocaleDateString()}.
-              </p>
-              <p>
-                Our team will review your request and contact you within 5-7
-                business days.
-              </p>
-              <div className="flex gap-4">
-                <Button asChild variant="outline">
-                  <Link href="/dashboard">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to Dashboard
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   if (isSubmitted) {
     return (
