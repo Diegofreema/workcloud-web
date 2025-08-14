@@ -8,7 +8,7 @@ const client = new StreamClient(apiKey, apiSecret);
 export async function POST(req: NextRequest) {
   try {
     const { image, name, email, id } = await req.json();
-    if (!image || !name || !email || !id) {
+    if (!name || !email || !id) {
       throw new Error(
         `Missing required fields: image:${image} name:${name} email:${email} id:${id}`
       );
