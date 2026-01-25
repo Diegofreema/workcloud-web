@@ -22,7 +22,10 @@ export async function GET(request: NextRequest) {
     const customer = await polar.customers.getStateExternal({
       externalId: userId,
     });
-    return NextResponse.json({ customer });
+    const subscription = await polar.subscriptions.get({
+      id: customer.activeSubscriptions[0].id,
+    });
+    return NextResponse.json({ customer, subscription });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: e }, { status: 500 });
