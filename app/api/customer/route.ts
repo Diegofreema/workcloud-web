@@ -10,7 +10,7 @@ const polar = new Polar({
 export async function GET(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, userId } = body;
+    const { userId } = body;
     if (!userId) {
       return NextResponse.json(
         {
