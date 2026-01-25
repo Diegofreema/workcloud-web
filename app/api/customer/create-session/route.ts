@@ -1,7 +1,6 @@
-// import { polar } from '@/lib/polar';
 import { Polar } from '@polar-sh/sdk';
 import { NextRequest, NextResponse } from 'next/server';
-export const polar = new Polar({
+const polar = new Polar({
   // server: process.env.SERVER as 'sandbox' | 'production' ?? 'sandbox',
   server: 'production',
   accessToken: process.env.POLAR_ACCESS_TOKEN!,
