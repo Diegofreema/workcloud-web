@@ -1,24 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
-
 import { polar } from '@/lib/polar';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, userId } = body;
-    if (!id || !userId) {
+    const { userId } = body;
+
+    if (!userId) {
       return NextResponse.json(
         {
-          error: 'Missing required fields: Product id or user id',
+          error: 'Missing required fields: User id',
         },
         { status: 400 },
       );
     }
-    const checkout = await polar.checkouts.create({
-      products: [id],
+    const result = await polar.customerSessions.create({
+      returnUrl: '/',
       externalCustomerId: userId,
     });
-    return NextResponse.json({ checkout });
+
+    return NextResponse.json({ result });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: e }, { status: 500 });

@@ -1,11 +1,5 @@
+import { polar } from '@/lib/polar';
 import { NextRequest, NextResponse } from 'next/server';
-import { Polar } from '@polar-sh/sdk';
-
-const polar = new Polar({
-  // server: process.env.SERVER as 'sandbox' | 'production' ?? 'sandbox',
-  server: 'production',
-  accessToken: process.env.POLAR_ACCESS_TOKEN!,
-});
 
 export async function GET(request: NextRequest) {
   try {
