@@ -9,8 +9,8 @@ const polar = new Polar({
 
 export async function GET(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { userId } = body;
+    const userId = request.nextUrl.searchParams.get('userId');
+
     if (!userId) {
       return NextResponse.json(
         {
