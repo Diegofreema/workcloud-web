@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       externalCustomerId: userId,
     });
 
-    return NextResponse.json({ result });
+    return NextResponse.json({ session: result });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: e }, { status: 500 });
