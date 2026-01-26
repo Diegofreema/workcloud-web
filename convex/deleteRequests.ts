@@ -1,5 +1,5 @@
 import { mutation, query } from './_generated/server';
-import { v } from 'convex/values';
+import { ConvexError, v } from 'convex/values';
 
 export const createDeletionRequest = mutation({
   args: {
@@ -17,7 +17,9 @@ export const createDeletionRequest = mutation({
       .first();
 
     if (existingRequest) {
-      throw new Error('You already have a pending deletion request.');
+      throw new ConvexError({
+        message: 'You already have a pending deletion request.',
+      });
     }
 
     const deletionRequestId = await ctx.db.insert('deletionRequests', {
