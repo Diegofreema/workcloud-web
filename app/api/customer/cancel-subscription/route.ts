@@ -1,5 +1,4 @@
 import { polar } from '@/lib/polar';
-import { Polar } from '@polar-sh/sdk';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
