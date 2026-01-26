@@ -48,7 +48,11 @@ export async function DELETE(request: NextRequest) {
       const statusCode = polarError.statusCode;
 
       // Parse body if it's a string
-      let parsedBody: { error?: string; detail?: string | any[] } = {};
+      type ValidationError = { loc: string[]; msg: string; type: string };
+      let parsedBody: {
+        error?: string;
+        detail?: string | ValidationError[];
+      } = {};
       if (polarError.body && typeof polarError.body === 'string') {
         try {
           parsedBody = JSON.parse(polarError.body);
