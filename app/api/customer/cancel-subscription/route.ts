@@ -39,7 +39,10 @@ export async function DELETE(request: NextRequest) {
 
     // Handle Polar API errors with specific status codes
     if (e && typeof e === 'object' && 'statusCode' in e) {
-      const error = e as { statusCode?: number; body?: any };
+      const error = e as {
+        statusCode?: number;
+        body?: { error: string; detail: string };
+      };
       const statusCode = error.statusCode;
       const body = error.body;
 
