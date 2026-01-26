@@ -39,19 +39,36 @@ export async function DELETE(request: NextRequest) {
 
     // Handle Polar API errors with specific status codes
     if (e && typeof e === 'object' && 'statusCode' in e) {
-      const error = e as {
+      const polarError = e as {
         statusCode?: number;
-        body?: { error: string; detail: string };
+        error?: string;
+        detail?: string;
+        body?: string;
       };
-      const statusCode = error.statusCode;
-      const body = error.body;
+      const statusCode = polarError.statusCode;
 
-      // Handle 402, 404, 409 - return { error, detail }
+      // Parse body if it's a string
+      let parsedBody: { error?: string; detail?: string | any[] } = {};
+      if (polarError.body && typeof polarError.body === 'string') {
+        try {
+          parsedBody = JSON.parse(polarError.body);
+        } catch {
+          // If parsing fails, use direct properties
+          parsedBody = {};
+        }
+      }
+
+      // Use direct properties from error object or parsed body
+      const errorMessage =
+        polarError.error || parsedBody.error || 'An error occurred';
+      const errorDetail = polarError.detail || parsedBody.detail || '';
+
+      // Handle 403, 404, 409 - return { error, detail }
       if (statusCode && [403, 404, 409].includes(statusCode)) {
         return NextResponse.json(
           {
-            error: body?.error || 'An error occurred',
-            detail: body?.detail || '',
+            error: errorMessage,
+            detail: errorDetail,
           },
           { status: statusCode },
         );
@@ -61,7 +78,7 @@ export async function DELETE(request: NextRequest) {
       if (statusCode === 422) {
         return NextResponse.json(
           {
-            detail: body?.detail || [],
+            detail: Array.isArray(errorDetail) ? errorDetail : [],
           },
           { status: 422 },
         );
