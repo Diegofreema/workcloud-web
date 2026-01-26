@@ -1,23 +1,33 @@
 import { Polar } from '@polar-sh/sdk';
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+
 const polar = new Polar({
   // server: process.env.SERVER as 'sandbox' | 'production' ?? 'sandbox',
   server: 'production',
   accessToken: process.env.POLAR_ACCESS_TOKEN!,
 });
+
+const requestSchema = z.object({
+  userId: z.string().min(1, 'User id is required'),
+});
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId } = body;
+    const parsed = requestSchema.safeParse(body);
 
-    if (!userId) {
+    if (!parsed.success) {
       return NextResponse.json(
         {
-          error: 'Missing required fields: User id',
+          error: parsed.error.issues[0]?.message || 'Invalid request body',
         },
         { status: 400 },
       );
     }
+
+    const { userId } = parsed.data;
+
     const result = await polar.customerSessions.create({
       returnUrl: '/',
       externalCustomerId: userId,
@@ -25,7 +35,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ session: result });
   } catch (e) {
-    console.log(e);
-    return NextResponse.json({ error: e }, { status: 500 });
+    console.error(e);
+    const message = e instanceof Error ? e.message : 'Failed to create session';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
