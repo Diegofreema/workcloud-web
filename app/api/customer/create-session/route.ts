@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
     const { userId } = parsed.data;
 
     const result = await polar.customerSessions.create({
-      returnUrl: '/',
       externalCustomerId: userId,
     });
 
