@@ -47,7 +47,7 @@ export async function DELETE(request: NextRequest) {
       const body = error.body;
 
       // Handle 402, 404, 409 - return { error, detail }
-      if (statusCode && [402, 404, 409].includes(statusCode)) {
+      if (statusCode && [403, 404, 409].includes(statusCode)) {
         return NextResponse.json(
           {
             error: body?.error || 'An error occurred',
