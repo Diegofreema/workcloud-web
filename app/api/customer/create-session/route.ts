@@ -1,12 +1,7 @@
+import { polar } from '@/lib/polar';
 import { Polar } from '@polar-sh/sdk';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-const polar = new Polar({
-  // server: process.env.SERVER as 'sandbox' | 'production' ?? 'sandbox',
-  server: 'production',
-  accessToken: process.env.POLAR_ACCESS_TOKEN!,
-});
 
 const requestSchema = z.object({
   userId: z.string().min(1, 'User id is required'),
