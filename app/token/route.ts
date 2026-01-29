@@ -6,6 +6,7 @@ const apiSecret = process.env.STEAM_SECRET_KEY!;
 
 const client = new StreamClient(apiKey, apiSecret);
 export async function POST(req: NextRequest) {
+  console.log('Received request to create token');
   try {
     const { image, name, email, id } = await req.json();
     if (!name || !email || !id) {
