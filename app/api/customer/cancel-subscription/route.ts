@@ -4,16 +4,14 @@ import { z } from 'zod';
 
 const requestSchema = z.object({
   id: z.string().min(1, 'Subscription id is required'),
-  session: z.string().min(1, 'Session id is required'),
 });
 
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
-    const session = searchParams.get('session');
 
-    const parsed = requestSchema.safeParse({ id, session });
+    const parsed = requestSchema.safeParse({ id });
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -24,14 +22,12 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const result = await polar.customerPortal.subscriptions.cancel(
-      {
-        customerSession: parsed.data.session,
+    const result = await polar.subscriptions.update({
+      id: parsed.data.id,
+      subscriptionUpdate: {
+        cancelAtPeriodEnd: true,
       },
-      {
-        id: parsed.data.id,
-      },
-    );
+    });
 
     return NextResponse.json({ subscription: result }, { status: 200 });
   } catch (e) {
